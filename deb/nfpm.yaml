@@ -1,0 +1,29 @@
+# https://nfpm.goreleaser.com/docs/configuration/
+
+name: prometheus-podman-exporter
+arch: ${TARGETARCH}
+platform: linux
+version: ${VERSION}
+version_schema: semver
+release: ${REVISION}
+section: net
+priority: optional
+maintainer: Navid Yaghoobi <navidys@fedoraproject.org>
+description: Prometheus exporter for podman environments exposing containers, pods, images, volumes and networks information.
+homepage: https://github.com/containers/prometheus-podman-exporter
+license: Apache License 2.0
+recommends:
+  - podman
+contents:
+  - src: ./bin/remote/prometheus-podman-exporter-${TARGETARCH}
+    dst: /usr/bin/prometheus-podman-exporter
+    expand: true
+
+  - src: ./LICENSE
+    dst: /usr/share/doc/prometheus-podman-exporter/LICENSE
+  - src: ./contrib/systemd/system/prometheus-podman-exporter.service
+    dst: /usr/lib/systemd/system/prometheus-podman-exporter.service
+  - src: ./contrib/systemd/user/prometheus-podman-exporter.service
+    dst: /usr/lib/systemd/user/prometheus-podman-exporter.service
+  - src: ./contrib/systemd/system/prometheus-podman-exporter.sysconfig
+    dst: /etc/default/prometheus-podman-exporter

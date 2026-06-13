@@ -1,0 +1,48 @@
+---
+name: Build and release for Debian and Ubuntu
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  deb:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goarch: [amd64, s390x, ppc64le, arm64]
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v6
+
+      - name: Setup Go
+        uses: actions/setup-go@v3
+        with:
+          go-version: '1.24.7'
+
+      - name: Get nfpm
+        run: go install github.com/goreleaser/nfpm/v2/cmd/nfpm@latest
+      
+      - name: Build binary
+        run: make binary-remote-${{ matrix.goarch }}
+
+      - name: Create .deb package
+        run: |
+          TARGETARCH=${{ matrix.goarch }}
+          VERSION=$(grep 'VERSION=' VERSION | awk -F= '{print $2'})
+          REVISION=$(grep 'REVISION=' VERSION | awk -F= '{print $2'})
+          nfpm pkg --config ./deb/nfpm.yaml --packager deb --target .
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref }}
+          name: ${{ github.ref_name }}
+          draft: true
+          prerelease: false
+          files: |
+            *.deb
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
