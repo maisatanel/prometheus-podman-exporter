@@ -15,7 +15,7 @@ license: Apache License 2.0
 recommends:
   - podman
 contents:
-  - src: ./bin/remote/prometheus-podman-exporter-${TARGETARCH}
+  - src: ${BINARYPATH}
     dst: /usr/bin/prometheus-podman-exporter
     expand: true
 

@@ -33,6 +33,7 @@ jobs:
           TARGETARCH=${{ matrix.goarch }}
           VERSION=$(grep 'VERSION=' VERSION | awk -F= '{print $2'})
           REVISION=$(grep 'REVISION=' VERSION | awk -F= '{print $2'})
+          BINARYPATH="./bin/remote/prometheus-podman-exporter-${{ matrix.goarch }}"
           nfpm pkg --config ./deb/nfpm.yaml --packager deb --target .
 
       - name: Create GitHub Release
