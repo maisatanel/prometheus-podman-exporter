@@ -12,8 +12,7 @@ SELINUXOPT ?= $(shell test -x /usr/sbin/selinuxenabled && selinuxenabled && echo
 BUILDFLAGS := -mod=vendor
 BUILDTAGS ?= \
 	$(shell hack/systemd_tag.sh) \
-	$(shell hack/btrfs_installed_tag.sh) \
-	$(shell hack/btrfs_tag.sh)
+	$(shell hack/btrfs_installed_tag.sh)
 
 VERSION = $(shell cat VERSION  | grep VERSION | cut -d'=' -f2)
 REVISION = $(shell cat VERSION  | grep REVISION | cut -d'=' -f2)
